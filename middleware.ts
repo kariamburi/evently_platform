@@ -1,10 +1,20 @@
 import { authMiddleware } from "@clerk/nextjs";
-export default authMiddleware({ 
-  ignoredRoutes: ["/((?!api|trpc))(_next|.+\..+)(.*)"],  
-  publicRoutes: ["/api/webhooks/clerk"],
-    debug: true
+ 
+export default authMiddleware({
+  publicRoutes: [
+    '/',
+    '/events/:id',
+    '/api/webhook/clerk',
+    '/api/webhook/stripe',
+    '/api/uploadthing'
+  ],
+  ignoredRoutes: [
+    '/api/webhook/clerk',
+    '/api/webhook/stripe',
+    '/api/uploadthing'
+  ]
 });
-
+ 
 export const config = {
-  matcher: ["/((?!.*\\..*|_next).*)", "/", "/(api|trpc)(.*)"],
+  matcher: ['/((?!.+\\.[\\w]+$|_next).*)', '/', '/(api|trpc)(.*)'],
 };
