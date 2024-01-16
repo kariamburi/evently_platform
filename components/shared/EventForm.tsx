@@ -25,8 +25,10 @@ import { FileUploader } from "./FileUploader";
 import Image from "next/image";
 import { Checkbox } from "../ui/checkbox";
 import { useUploadThing } from "@/lib/uploadthing";
-import { createEvent } from "@/lib/actions/event.actions";
-import router from "next/router";
+import { createEvent, updateEvent } from "@/lib/actions/event.actions";
+//import router from "next/router";
+import { useRouter } from "next/navigation";
+
 type EventFormProps = {
   userId: string;
   type: "Create" | "Update";
@@ -35,7 +37,18 @@ type EventFormProps = {
 };
 
 const EventForm = ({ userId, type, event, eventId }: EventFormProps) => {
-  const initialValues = eventDefaultValues;
+  //const initialValues = eventDefaultValues;
+
+  const initialValues =
+    event && type === "Update"
+      ? {
+          ...event,
+          startDateTime: new Date(event.startDateTime),
+          endDateTime: new Date(event.endDateTime),
+        }
+      : eventDefaultValues;
+  const router = useRouter();
+
   const [files, setFiles] = useState<File[]>([]);
   // 1. Define your form.
   const form = useForm<z.infer<typeof eventFormSchema>>({
@@ -64,10 +77,31 @@ const EventForm = ({ userId, type, event, eventId }: EventFormProps) => {
           userId,
           path: "/profile",
         });
-
         if (newEvent) {
           form.reset();
           router.push(`/events/${newEvent._id}`);
+          // window.location.href = "/events/" + newEvent._id;
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    if (type === "Update") {
+      if (!eventId) {
+        router.back();
+        return;
+      }
+
+      try {
+        const updatedEvent = await updateEvent({
+          userId,
+          event: { ...values, imageUrl: uploadedImageUrl, _id: eventId },
+          path: `/events/${eventId}`,
+        });
+
+        if (updatedEvent) {
+          form.reset();
+          router.push(`/events/${updatedEvent._id}`);
         }
       } catch (error) {
         console.log(error);
