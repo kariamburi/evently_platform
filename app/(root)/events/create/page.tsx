@@ -4,11 +4,10 @@ import { auth } from "@clerk/nextjs";
 const CreateEvent = () => {
   const { sessionClaims } = auth();
 
-  //const userId = sessionClaims?.userId as string;
-  const userId = "65a5432f316b7cddba68a9e7";
-  //const firstName = sessionClaims?.fullName;
+  const userId = sessionClaims?.userId as string;
   //console.log("firstName:" + firstName);
-  //console.log("userId:" + userId);
+  //console.log(userId);
+
   return (
     <>
       <section className="bg-primary-50 bg-dotted-pattern bg-cover bg-center py-5 md:py-10">
