@@ -1,3 +1,4 @@
+"use client";
 import {
   Sheet,
   SheetContent,
@@ -9,12 +10,23 @@ import {
 import Image from "next/image";
 import { Separator } from "../ui/separator";
 import NavItems from "./NavItems";
+import { useState } from "react";
 
 const MobileNav = () => {
+  const [isSheetOpen, setIsSheetOpen] = useState(false);
+
+  const handleclicklink = () => {
+    setIsSheetOpen(false);
+  };
   return (
     <nav className="md:hidden">
-      <Sheet>
-        <SheetTrigger className="align-middle">
+      <Sheet open={isSheetOpen}>
+        <SheetTrigger
+          className="align-middle"
+          onClick={() => {
+            setIsSheetOpen(true);
+          }}
+        >
           <Image
             src="/assets/icons/menu.svg"
             alt="menu"
@@ -23,7 +35,10 @@ const MobileNav = () => {
             className="cursor-pointer"
           />
         </SheetTrigger>
-        <SheetContent className="flex flex-col gap-6 bg-white md:hidden">
+        <SheetContent
+          className="flex flex-col gap-6 bg-white md:hidden"
+          onClick={handleclicklink}
+        >
           <Image
             src="/assets/images/logo.svg"
             alt="logo"
